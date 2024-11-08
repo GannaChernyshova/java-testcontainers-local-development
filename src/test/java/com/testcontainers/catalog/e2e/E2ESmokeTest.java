@@ -24,6 +24,7 @@ public class E2ESmokeTest extends BaseIntegrationTest {
     @LocalServerPort
     private int port;
 
+//    test comment
     @Container
     public BrowserWebDriverContainer<?> firefox =
             new BrowserWebDriverContainer<>().withCapabilities(new FirefoxOptions());
