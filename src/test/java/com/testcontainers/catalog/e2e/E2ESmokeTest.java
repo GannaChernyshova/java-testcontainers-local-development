@@ -31,7 +31,7 @@ public class E2ESmokeTest extends BaseIntegrationTest {
     private File target = new File(System.getProperty("user.dir"), "target");
 
 
-    //test comment
+    //test E2E comment
     @Container
     public BrowserWebDriverContainer<?> firefox =
             new BrowserWebDriverContainer<>()
