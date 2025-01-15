@@ -37,7 +37,6 @@ class ProductControllerTest extends BaseIntegrationTest {
     @Autowired
     MicrocksContainer microcks;
 
-    // test comment
     @Test
     void createProductSuccessfully() {
         String code = UUID.randomUUID().toString();
