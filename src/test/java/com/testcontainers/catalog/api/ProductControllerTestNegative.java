@@ -50,6 +50,7 @@ public class ProductControllerTestNegative extends BaseIntegrationTest {
     @Test
     void doesNotCreateProductIfPayloadInvalid() {
         String code = UUID.randomUUID().toString();
+
         given().contentType(ContentType.JSON)
                 .body(
                         """
