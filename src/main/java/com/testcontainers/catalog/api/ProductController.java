@@ -41,7 +41,7 @@ class ProductController {
         return ResponseEntity.created(uri).build();
     }
 
-//    test push GHA
+    //    test push GHA
     @GetMapping("/{code}")
     ResponseEntity<Product> getProductByCode(@PathVariable String code) {
         var product = productService.getProductByCode(code).orElseThrow(() -> ProductNotFoundException.withCode(code));

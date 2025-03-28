@@ -3,7 +3,6 @@ package com.testcontainers.catalog.e2e;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.testcontainers.catalog.BaseIntegrationTest;
-
 import java.io.File;
 import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
@@ -31,10 +30,12 @@ public class E2ESmokeTest extends BaseIntegrationTest {
     private File target = new File(System.getProperty("user.dir"), "target");
 
     @Container
-    public BrowserWebDriverContainer<?> firefox =
-            new BrowserWebDriverContainer<>()
-                    .withCapabilities(new FirefoxOptions())
-                    .withRecordingMode(BrowserWebDriverContainer.VncRecordingMode.RECORD_ALL, target, VncRecordingContainer.VncRecordingFormat.MP4);
+    public BrowserWebDriverContainer<?> firefox = new BrowserWebDriverContainer<>()
+            .withCapabilities(new FirefoxOptions())
+            .withRecordingMode(
+                    BrowserWebDriverContainer.VncRecordingMode.RECORD_ALL,
+                    target,
+                    VncRecordingContainer.VncRecordingFormat.MP4);
 
     @Test
     void shouldVerifyProductsAreVisibleOnThePage() {

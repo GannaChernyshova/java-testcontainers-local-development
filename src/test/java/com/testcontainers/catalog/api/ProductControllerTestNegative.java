@@ -44,7 +44,8 @@ public class ProductControllerTestNegative extends BaseIntegrationTest {
                 .when()
                 .post("/api/products")
                 .then()
-                .statusCode(500);
+                .statusCode(409)
+                .body("title", endsWith("Product Already Exists"));
     }
 
     @Test
