@@ -22,31 +22,19 @@ To get started with the jetbrains-mcp (Model Context Protocol) for IntelliJ IDEA
   - Enable "Can accept external connections" option (you might need to reopen the setting window to make this checkbox available)
   - Enable "Allow unsigned requests" option
 
-3. Important Configuration Parameters:
-  - Make sure to provide the correct IDEA port in your configuration
-  - Use `host.docker.internal:host-gateway` in your Docker configuration to allow the MCP server to connect to your IDE
-
-## Gordon Docker Compose Configuration (WIP)
-
-Example configuration (as seen in gordon-mcp.yml):
-```yaml
-services:
-  mcp_jetbrains:
-    image: annachernyshova809/mcp-jetbrains:v1.1
-    environment:
-      - IDE_PORT=8090
-      - LOG_ENABLED=true
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    x-mcp-autoremove: false
-```
-
-The `host.docker.internal:host-gateway` setting is crucial for the Docker container to be able to communicate with your host machine where the IDE is running.
-
 ## Claude Desktop Configuration
 
-To use the jetbrains-mcp server with Claude Desktop, add the following configuration to your `claude_desktop_config.json` file:
+To use the jetbrains-mcp server with Claude Desktop, add the MCP configuration to your `claude_desktop_config.json` file.
 
+The file location depends on your operating system:
+- macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
+- Windows: `%APPDATA%/Claude/claude_desktop_config.json`
+
+Important Configuration Parameters:
+- Make sure to provide the correct IDEA port in your configuration (that you configured up on the step 2)
+- Use `host.docker.internal:host-gateway` in your Docker configuration to allow the MCP server to connect to your IDE
+
+This configuration will allow Claude Desktop to communicate with your IntelliJ IDE through the MCP server.
 ```json
 {
   "mcpServers": {
@@ -71,11 +59,22 @@ To use the jetbrains-mcp server with Claude Desktop, add the following configura
 }
 ```
 
-The file location depends on your operating system:
-- macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
-- Windows: `%APPDATA%/Claude/claude_desktop_config.json`
+## Gordon Docker Compose Configuration (WIP)
 
-This configuration will allow Claude Desktop to communicate with your IntelliJ IDE through the MCP server.
+Example configuration (as seen in gordon-mcp.yml):
+```yaml
+services:
+  mcp_jetbrains:
+    image: annachernyshova809/mcp-jetbrains:v1.1
+    environment:
+      - IDE_PORT=8090
+      - LOG_ENABLED=true
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    x-mcp-autoremove: false
+```
+
+The `host.docker.internal:host-gateway` setting is crucial for the Docker container to be able to communicate with your host machine where the IDE is running.
 
 
 ## Running the app
