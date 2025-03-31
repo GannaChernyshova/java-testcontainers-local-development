@@ -12,12 +12,14 @@ We will explore a Spring Boot application and show how to:
 To get started with the jetbrains-mcp (Model Context Protocol) for IntelliJ IDEA, follow these steps:
 
 1. Install the MCP Server plugin for IntelliJ IDEs
+  - Go to IntelliJ -> Settings -> Plugins ![img.png](plugin.png)
   - Add the [MCP Server for IntelliJ IDEs](https://plugins.jetbrains.com/plugin/26071-mcp-server) plugin to your IDE
   - This plugin allows the IDE to work with the MCP server
 
 2. Configure the built-in server settings in IntelliJ IDEA:
+  - Go to IntelliJ -> Settings -> Build, Execution, Deployment -> Debugger ![img.png](settings.png)
   - Change the port of the built-in server to 8090 (or another available port)
-  - Enable "Can accept external connections" option
+  - Enable "Can accept external connections" option (you might need to reopen the setting window to make this checkbox available)
   - Enable "Allow unsigned requests" option
 
 3. Important Configuration Parameters:
