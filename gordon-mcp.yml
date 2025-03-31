@@ -1,0 +1,9 @@
+services:
+  mcp_jetbrains:
+    image: annachernyshova809/mcp-jetbrains:v1.1
+    environment:
+      - IDE_PORT=8090
+      - LOG_ENABLED=true
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    x-mcp-autoremove: false
