@@ -27,7 +27,7 @@ To get started with the jetbrains-mcp (Model Context Protocol) for IntelliJ IDEA
 To use the jetbrains-mcp server with Claude Desktop, add the MCP configuration to your `claude_desktop_config.json` file.
 
 The file location depends on your operating system:
-- macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
+- macOS: `~/Library/Application\ Support/Claude/claude_desktop_config.json`
 - Windows: `%APPDATA%/Claude/claude_desktop_config.json`
 
 Important Configuration Parameters:
@@ -52,7 +52,7 @@ This configuration will allow Claude Desktop to communicate with your IntelliJ I
         "LOG_ENABLED=true",
         "-e",
         "DOCKER_CONTAINER=true",
-        "annachernyshova809/mcp-jetbrains:v1.1"
+        "mcp/jetbrains:latest"
       ]
     }
   }
