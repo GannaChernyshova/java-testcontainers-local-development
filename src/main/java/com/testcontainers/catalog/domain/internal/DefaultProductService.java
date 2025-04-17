@@ -37,11 +37,6 @@ class DefaultProductService implements ProductService {
     }
 
     public void createProduct(CreateProductRequest request) {
-        // Check if product with the same code already exists
-        if (productRepository.findByCode(request.code()).isPresent()) {
-            throw com.testcontainers.catalog.domain.ProductDuplicateException.withCode(request.code());
-        }
-
         ProductEntity entity = new ProductEntity();
         entity.setCode(request.code());
         entity.setName(request.name());

@@ -1,6 +1,5 @@
 package com.testcontainers.catalog.config;
 
-import com.testcontainers.catalog.domain.ProductDuplicateException;
 import com.testcontainers.catalog.domain.ProductNotFoundException;
 import java.time.Instant;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -17,14 +16,6 @@ class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     ProblemDetail handleProductNotFoundException(ProductNotFoundException e) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, e.getMessage());
         problemDetail.setTitle("Product Not Found");
-        problemDetail.setProperty("timestamp", Instant.now());
-        return problemDetail;
-    }
-
-    @ExceptionHandler(ProductDuplicateException.class)
-    ProblemDetail handleProductDuplicateException(ProductDuplicateException e) {
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, e.getMessage());
-        problemDetail.setTitle("Product Already Exists");
         problemDetail.setProperty("timestamp", Instant.now());
         return problemDetail;
     }
