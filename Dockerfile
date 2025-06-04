@@ -1,5 +1,7 @@
 # Use an official OpenJDK runtime as a parent image
-FROM openjdk:24-jdk-slim
+#FROM demonstrationorg/dhi-maven:3.9.9-jdk21-dev AS builder
+
+FROM maven:3.9.9-eclipse-temurin-21 AS builder
 
 # Set the working directory in the container
 WORKDIR /app
@@ -8,18 +10,15 @@ WORKDIR /app
 COPY pom.xml ./
 COPY src ./src
 
-# Install Maven and build the project (using a multi-stage build to reduce final image size)
-RUN apt-get update && apt-get install -y maven && \
-    mvn dependency:resolve
-
 # Build the project
-RUN mvn package -DskipTests
+RUN mvn clean package -DskipTests
 
 # Copy the built jar file to a clean image
-FROM openjdk:24-jdk-slim
+#FROM demonstrationorg/dhi-eclipse-temurin:21
+FROM eclipse-temurin:21
 
 WORKDIR /app
-COPY --from=0 /app/target/*.jar /app/app.jar
+COPY --from=builder /app/target/*.jar /app/app.jar
 USER nonroot
 # Expose port 8080 (if your application uses it)
 EXPOSE 8080

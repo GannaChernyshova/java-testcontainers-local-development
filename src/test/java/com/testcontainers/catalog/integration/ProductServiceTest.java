@@ -44,7 +44,6 @@ class ProductServiceTest {
     @Test
     void shouldUpdateProductImageWhenEventIsReceived() {
         Optional<Product> product = productService.getProductByCode("P201");
-
         assertThat(product.get().code()).isEqualTo("P201");
         assertThat(product.get().name()).isEqualTo("Product %s".formatted("P201"));
         assertThat(product.get().description()).isEqualTo("Product %s description".formatted("P201"));

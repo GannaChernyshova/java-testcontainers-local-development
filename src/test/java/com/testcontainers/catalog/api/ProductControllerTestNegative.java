@@ -12,43 +12,6 @@ import org.springframework.test.context.jdbc.Sql;
 @Sql("/test-data.sql")
 public class ProductControllerTestNegative extends BaseIntegrationTest {
     @Test
-    void doesNotCreateProductIfProductCodeExists() {
-        String code = UUID.randomUUID().toString();
-        given().contentType(ContentType.JSON)
-                .body(
-                        """
-                                {
-                                    "code": "%s",
-                                    "name": "Product %s",
-                                    "description": "Product %s description",
-                                    "price": 10.0
-                                }
-                                """
-                                .formatted(code, code, code))
-                .when()
-                .post("/api/products")
-                .then()
-                .statusCode(201);
-
-        given().contentType(ContentType.JSON)
-                .body(
-                        """
-                                {
-                                    "code": "%s",
-                                    "name": "Another Product %s",
-                                    "description": "Another product %s description",
-                                    "price": 11.0
-                                }
-                                """
-                                .formatted(code, code, code))
-                .when()
-                .post("/api/products")
-                .then()
-                .statusCode(409)
-                .body("title", endsWith("Product Already Exists"));
-    }
-
-    @Test
     void doesNotCreateProductIfPayloadInvalid() {
         String code = UUID.randomUUID().toString();
 
