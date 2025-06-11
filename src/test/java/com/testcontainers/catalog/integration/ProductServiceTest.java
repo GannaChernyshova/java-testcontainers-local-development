@@ -22,7 +22,7 @@ class ProductServiceTest {
 
     @Container
     static PostgreSQLContainer postgres =
-            new PostgreSQLContainer<>(parse("postgres:16-alpine"))
+            new PostgreSQLContainer<>(parse("postgres:17.5-alpine"))
                     .withInitScript("init-test-data.sql");
 
     @DynamicPropertySource
@@ -32,9 +32,7 @@ class ProductServiceTest {
         registry.add("spring.datasource.username", postgres::getUsername);
         registry.add("spring.datasource.password", postgres::getPassword);
 
-        // Disable Flyway
         registry.add("spring.flyway.enabled", () -> "false");
-        // Optional: Configure Hibernate to validate schema
         registry.add("spring.jpa.hibernate.ddl-auto", () -> "validate");
     }
 

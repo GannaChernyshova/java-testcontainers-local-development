@@ -19,18 +19,18 @@ public class ContainersConfig {
     @Bean
     @ServiceConnection
     PostgreSQLContainer<?> postgresContainer() {
-        return new PostgreSQLContainer<>(parse("postgres:17-alpine"));
+        return new PostgreSQLContainer<>(parse("postgres:17.5-alpine"));
     }
 
     @Bean
     @ServiceConnection
     KafkaContainer kafkaContainer() {
-        return new KafkaContainer(parse("confluentinc/cp-kafka:7.5.0"));
+        return new KafkaContainer(parse("confluentinc/cp-kafka:7.9.1"));
     }
 
     @Bean("localstackContainer")
     LocalStackContainer localstackContainer(DynamicPropertyRegistry registry) {
-        LocalStackContainer localStack = new LocalStackContainer(parse("localstack/localstack:2.3"));
+        LocalStackContainer localStack = new LocalStackContainer(parse("localstack/localstack:4.5.0"));
         registry.add("spring.cloud.aws.credentials.access-key", localStack::getAccessKey);
         registry.add("spring.cloud.aws.credentials.secret-key", localStack::getSecretKey);
         registry.add("spring.cloud.aws.region.static", localStack::getRegion);
@@ -46,7 +46,7 @@ public class ContainersConfig {
 
     @Bean
     MicrocksContainer microcksContainer(DynamicPropertyRegistry registry) {
-        MicrocksContainer microcks = new MicrocksContainer("quay.io/microcks/microcks-uber:1.8.1")
+        MicrocksContainer microcks = new MicrocksContainer("quay.io/microcks/microcks-uber:1.12.0")
                 .withMainArtifacts("inventory-openapi.yaml")
                 .withAccessToHost(true);
 
