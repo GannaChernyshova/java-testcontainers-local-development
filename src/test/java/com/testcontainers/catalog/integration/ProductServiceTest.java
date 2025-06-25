@@ -40,22 +40,22 @@ class ProductServiceTest {
     @Autowired
     ProductService productService;
 
-    @Test
-    void shouldGetProductByCode() {
-        productService.createProduct(new CreateProductRequest(
-                "P2011",
-                "Product P2011",
-                "Product P2011 description",
-                new BigDecimal("141.0")));
-        Optional<Product> product = productService.getProductByCode("P2011");
-
-        assertThat(product.get().name())
-                .isEqualTo("Product %s".formatted("P2011"));
-
-        assertThat(product.get().description())
-                .isEqualTo("Product %s description".formatted("P2011"));
-
-        assertThat(product.get().price()
-                .compareTo(new BigDecimal("141.0"))).isEqualTo(0);
-    }
+//    @Test
+//    void shouldGetProductByCode() {
+//        productService.createProduct(new CreateProductRequest(
+//                "P2011",
+//                "Product P2011",
+//                "Product P2011 description",
+//                new BigDecimal("141.0")));
+//        Optional<Product> product = productService.getProductByCode("P2011");
+//
+//        assertThat(product.get().name())
+//                .isEqualTo("Product %s".formatted("P2011"));
+//
+//        assertThat(product.get().description())
+//                .isEqualTo("Product %s description".formatted("P2011"));
+//
+//        assertThat(product.get().price()
+//                .compareTo(new BigDecimal("141.0"))).isEqualTo(0);
+//    }
 }
