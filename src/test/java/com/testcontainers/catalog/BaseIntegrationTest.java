@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Import;
 import org.testcontainers.Testcontainers;
 
 @SpringBootTest(
+        classes = Application.class,
         webEnvironment = RANDOM_PORT,
         properties = {"spring.kafka.consumer.auto-offset-reset=earliest"})
 @Import(ContainersConfig.class)

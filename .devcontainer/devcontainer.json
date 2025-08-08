@@ -1,11 +1,46 @@
 {
-	"name": "idea-demo",
-	"image": "mcr.microsoft.com/devcontainers/java:21",
-	"runArgs": ["--env-file","/Users/annachernysheva/Work/Docker/java-testcontainers-local-development/.devcontainer/devcontainer.env"],
+	"name": "Java testcontainers local development",
+	"image": "mcr.microsoft.com/devcontainers/java:0-17",
+//	"runArgs": ["--env-file",".devcontainer/devcontainer.env"],
 	"containerEnv": {
+		"JAVA_HOME": "/usr/lib/jvm/msopenjdk-current",
 		"TC_CLOUD_TOKEN": "${localEnv:TC_CLOUD_TOKEN}",
+		"TCC_PROJECT_KEY": "Java_testcontainers_local_development"
 	},
-	"postStartCommand": "bash ./install-tcc-agent.sh"
+	// Configure tool-specific properties.
+	"customizations": {
+		// Configure properties specific to VS Code.
+		"vscode": {
+			// Set *default* container specific settings.json values on container create.
+			"settings": {
+				"workbench.colorTheme": "GitHub Dark",
+				"spring.initializr.defaultLanguage": "Java"
+			},
+			// Add the IDs of extensions you want installed when the container is created.
+			"extensions": [
+				"asciidoctor.asciidoctor-vscode",
+				"github.github-vscode-theme",
+				"pivotal.vscode-boot-dev-pack",
+				"redhat.vscode-yaml",
+				"vscjava.vscode-java-pack"
+			]
+		}
+	},
+	"remoteUser": "vscode",
+	"features": {
+		"ghcr.io/devcontainers/features/git:1": {},
+		"ghcr.io/devcontainers/features/github-cli:1": {},
+		"ghcr.io/meaningful-ooo/devcontainer-features/homebrew:2": {},
+		"ghcr.io/devcontainers/features/java:1": {
+			"version": "none",
+			"installMaven": "true",
+			"installGradle": "false"
+		},
+		// Download and install the TCC agent.
+		"ghcr.io/eddumelendez/test-devcontainer/tcc:0.0.2": {}
+	},
+	// Add a postAttachCommand to start the TCC agent.
+	"postAttachCommand": "nohup /usr/local/share/tcc-agent &"
 }
 
 

@@ -1,0 +1,199 @@
+<html>
+<head>
+    <title>Product List</title>
+    <style>
+        .product {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 5px;
+            width: 200px;
+            display: inline-block;
+            vertical-align: top;
+            text-align: center;
+        }
+
+        .product img {
+            width: 80px;
+            height: 80px;
+        }
+
+        .create-product-form {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            width: 300px;
+        }
+
+        .create-product-form input {
+            display: block;
+            margin: 5px 0;
+            padding: 5px;
+            width: 100%;
+        }
+
+        .create-product-form button {
+            padding: 5px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .create-product-form button:hover {
+            background-color: #218838;
+        }
+
+        .upload-button {
+            margin-top: 10px;
+            padding: 5px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .upload-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+    <script>
+        async function fetchProducts() {
+            const response = await fetch('/api/data');
+            const products = await response.json();
+            products.sort((a, b) => a.name.localeCompare(b.name));
+
+            const productListElement = document.getElementById("product-list");
+            productListElement.innerHTML = "";
+
+            products.forEach(product => {
+                const productElement = document.createElement("div");
+                productElement.classList.add("product");
+
+                productElement.innerHTML = `
+                    <h3>${product.name}</h3>
+                    <img id="product-img-${product.code}" src="${product.imageUrl || '/P101.jpg'}" alt="${product.name}">
+                    <p>Description: ${product.description}</p>
+                    <p>Price: $${product.price}</p>
+                    <p>Available: ${product.available ? "Yes" : "No"}</p>
+                    <input type="file" id="upload-${product.code}" style="display: none;" onchange="uploadImage('${product.code}')">
+                    <input type="text" id="url-${product.code}" placeholder="Image URL" oninput="disableFileInput('${product.code}')">
+                    <button class="upload-button" onclick="uploadImage('${product.code}')">Upload Image</button>
+                `;
+
+                productListElement.appendChild(productElement);
+            });
+        }
+
+        async function createProduct(event) {
+            event.preventDefault();
+
+            const code = document.getElementById('product-code').value;
+            const name = document.getElementById('product-name').value;
+            const description = document.getElementById('product-description').value;
+            const price = document.getElementById('product-price').value;
+            const available = document.getElementById('product-available').checked;
+
+            const requestBody = {
+                code: code,
+                name: name,
+                description: description,
+                price: parseFloat(price),
+                available: available
+            };
+
+            try {
+                const response = await fetch('/api/products', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+
+                if (response.status === 201) {
+                    alert('Product created successfully!');
+                    document.getElementById('create-product-form').reset();
+                    fetchProducts();  // Refresh the product list
+                } else {
+                    alert('Failed to create product.');
+                }
+            } catch (error) {
+                console.error('Error creating product:', error);
+                alert('Error creating product.');
+            }
+        }
+
+        // Handle the image upload logic
+        // Function to handle image upload
+        async function uploadImage(productCode) {
+            const fileInput = document.getElementById(`upload-${productCode}`);
+            const urlInput = document.getElementById(`url-${productCode}`);
+            const file = fileInput.files[0];
+            const imageUrl = urlInput.value;
+
+            const formData = new FormData();
+
+            if (file) {
+                formData.append("file", file);
+            } else if (imageUrl) {
+                formData.append("imageUrl", imageUrl);
+            } else {
+                alert("Please select a file or provide an image URL.");
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/products/${productCode}/image`, {
+                    method: "POST",
+                    body: formData
+                });
+
+                const result = await response.json();
+                if (result.status === "success") {
+                    alert("Image uploaded successfully: " + result.filename);
+                    fetchProducts();  // Re-fetch products to display updated images
+                } else {
+                    alert("Failed to upload image.");
+                }
+            } catch (error) {
+                console.error("Error uploading image:", error);
+                alert("Error uploading image.");
+            }
+        }
+
+
+        function disableFileInput(productCode) {
+            const fileInput = document.getElementById(`upload-${productCode}`);
+            const urlInput = document.getElementById(`url-${productCode}`);
+
+            if (urlInput.value) {
+                fileInput.disabled = true;
+            } else {
+                fileInput.disabled = false;
+            }
+        }
+
+
+        window.onload = fetchProducts;
+    </script>
+</head>
+<body>
+<h1>Product List</h1>
+<div id="product-list"></div>
+
+<!-- Form to create a new product -->
+<div class="create-product-form">
+    <h2>Create New Product</h2>
+    <form id="create-product-form" onsubmit="createProduct(event)">
+        <input type="text" id="product-code" placeholder="Product Code" required />
+        <input type="text" id="product-name" placeholder="Product Name" required />
+        <input type="text" id="product-description" placeholder="Description" required />
+        <input type="number" step="0.01" id="product-price" placeholder="Price" required />
+        <label>
+            <input type="checkbox" id="product-available" /> Available
+        </label>
+        <button type="submit">Create Product</button>
+    </form>
+</div>
+</body>
+</html>

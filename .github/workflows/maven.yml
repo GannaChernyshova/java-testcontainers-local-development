@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - '**'
+    paths-ignore:
+      - '**/README.md'
 
 jobs:
   test:
@@ -25,4 +27,4 @@ jobs:
           token: ${{ secrets.TC_CLOUD_TOKEN }}
 
       - name: Test
-        run: ./mvnw test
+        run: ./mvnw spotless:apply test

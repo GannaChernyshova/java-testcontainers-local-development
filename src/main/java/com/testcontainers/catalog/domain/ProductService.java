@@ -3,6 +3,7 @@ package com.testcontainers.catalog.domain;
 import com.testcontainers.catalog.domain.models.CreateProductRequest;
 import com.testcontainers.catalog.domain.models.Product;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Optional;
 
 public interface ProductService {
@@ -14,4 +15,6 @@ public interface ProductService {
     void uploadProductImage(String code, String imageName, InputStream inputStream);
 
     void updateProductImage(String code, String image);
+
+    List<Product> getAllProducts();
 }

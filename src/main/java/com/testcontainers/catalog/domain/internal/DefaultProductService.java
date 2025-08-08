@@ -7,6 +7,7 @@ import com.testcontainers.catalog.domain.models.CreateProductRequest;
 import com.testcontainers.catalog.domain.models.Product;
 import com.testcontainers.catalog.domain.models.ProductImageUploadedEvent;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +44,11 @@ class DefaultProductService implements ProductService {
         entity.setPrice(request.price());
 
         productRepository.save(entity);
+    }
+
+    @Override
+    public List<Product> getAllProducts() {
+        return productRepository.findAll().stream().map(this::toProduct).toList();
     }
 
     public Optional<Product> getProductByCode(String code) {

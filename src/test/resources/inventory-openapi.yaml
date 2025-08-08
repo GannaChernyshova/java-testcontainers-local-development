@@ -34,6 +34,10 @@ paths:
                   value:
                     code: P101
                     quantity: 25
+                P102:
+                  value:
+                    code: P102
+                    quantity: 5
                 P103:
                   value:
                     code: P103
@@ -44,7 +48,7 @@ paths:
               schema:
                 type: string
               examples:
-                P102:
+                P104:
                   value: ""
 components:
   schemas:

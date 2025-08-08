@@ -19,19 +19,16 @@ class ProductEntity {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    @NotEmpty(message = "Product code must not be null/empty")
-    private String code;
+    @NotEmpty(message = "Product code must not be null/empty") private String code;
 
-    @NotEmpty(message = "Product name must not be null/empty")
-    @Column(nullable = false)
+    @NotEmpty(message = "Product name must not be null/empty") @Column(nullable = false)
     private String name;
 
     private String description;
 
     private String image;
 
-    @NotNull(message = "Product price must not be null") @DecimalMin("0.1")
-    @Column(nullable = false)
+    @NotNull(message = "Product price must not be null") @DecimalMin("0.1") @Column(nullable = false)
     private BigDecimal price;
 
     public ProductEntity() {}
