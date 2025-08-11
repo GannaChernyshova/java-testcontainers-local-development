@@ -66,6 +66,11 @@ class ProductController {
         }
         // Handle image from URL
         else {
+            // Validate imageUrl before using
+            if (imageUrl == null || !imageUrl.matches("^https?://.+")) {
+                return ResponseEntity.status(HttpURLConnection.HTTP_BAD_REQUEST)
+                        .body(Map.of("status", "error", "message", "Invalid imageUrl format"));
+            }
             URL url = new URL(imageUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
