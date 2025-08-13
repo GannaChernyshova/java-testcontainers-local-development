@@ -70,6 +70,13 @@ class DefaultProductService implements ProductService {
         productRepository.updateProductImage(code, image);
     }
 
+    @Override
+    public List<Product> getProductsByNameContaining(String name) {
+        return productRepository.findByNameContainingIgnoreCase(name).stream()
+                .map(this::toProduct)
+                .toList();
+    }
+
     private boolean isProductAvailable(String code) {
         try {
             return inventoryServiceClient.getInventory(code).quantity() > 0;

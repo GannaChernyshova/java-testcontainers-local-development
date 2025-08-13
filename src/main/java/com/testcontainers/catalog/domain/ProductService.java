@@ -17,4 +17,6 @@ public interface ProductService {
     void updateProductImage(String code, String image);
 
     List<Product> getAllProducts();
+
+    List<Product> getProductsByNameContaining(String name);
 }

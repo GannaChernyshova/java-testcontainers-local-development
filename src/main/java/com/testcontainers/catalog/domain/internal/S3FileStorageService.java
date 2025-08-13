@@ -29,7 +29,8 @@ class S3FileStorageService implements FileStorageService {
     public void upload(String filename, @Nullable InputStream inputStream) {
         log.debug("Uploading file to S3");
         try {
-            s3Template.upload(properties.productImagesBucketName(), filename, Objects.requireNonNull(inputStream), null);
+            s3Template.upload(
+                    properties.productImagesBucketName(), filename, Objects.requireNonNull(inputStream), null);
             log.debug("File uploaded to S3");
         } catch (Exception e) {
             log.error(

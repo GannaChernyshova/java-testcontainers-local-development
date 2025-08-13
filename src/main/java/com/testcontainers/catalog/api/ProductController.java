@@ -14,6 +14,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.List;
 import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -100,5 +101,11 @@ class ProductController {
 
         Map<String, String> response = Map.of(STATUS_KEY, "success", "filename", imageName);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/search")
+    ResponseEntity<List<Product>> searchProductsByName(@RequestParam("name") String name) {
+        List<Product> products = productService.getProductsByNameContaining(name);
+        return ResponseEntity.ok(products);
     }
 }
