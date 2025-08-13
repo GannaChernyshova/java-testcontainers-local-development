@@ -84,6 +84,30 @@ class ProductControllerTest extends BaseIntegrationTest {
     }
 
     @Test
+    void shouldReturnBadRequestForInvalidImageUrl() throws IOException {
+        String code = "P101";
+        File file = new ClassPathResource("P101.jpg").getFile();
+
+        Optional<Product> product = productService.getProductByCode(code);
+        assertThat(product).isPresent();
+        assertThat(product.get().imageUrl()).isNull();
+
+        given().multiPart("/products/test-invalid-url/image", file, "multipart/form-data")
+                .contentType(ContentType.MULTIPART)
+                .when()
+                .post("/api/products/{code}/image", code)
+                .then()
+                .statusCode(400)
+                .body("status", endsWith("error"));
+
+        await().pollInterval(Duration.ofSeconds(3)).atMost(10, SECONDS).untilAsserted(() -> {
+            Optional<Product> optionalProduct = productService.getProductByCode(code);
+            assertThat(optionalProduct).isPresent();
+            assertThat(optionalProduct.get().imageUrl()).isNull();
+        });
+    }
+
+    @Test
     void getProductByCodeSuccessfully() {
         String code = "P101";
 
@@ -165,5 +189,59 @@ class ProductControllerTest extends BaseIntegrationTest {
         System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(testResult));
 
         assertThat(testResult.isSuccess()).isTrue();
+    }
+
+    @Test
+    void shouldUploadImageFromValidImageUrl() throws Exception {
+        // Start a simple HTTP server to serve an image
+        String code = "P102";
+        String imageContent = "dummy-image-content";
+        int port = 8888;
+        String imageUrl = "http://localhost:" + port + "/test-image.jpg";
+        com.sun.net.httpserver.HttpServer server =
+                com.sun.net.httpserver.HttpServer.create(new java.net.InetSocketAddress(port), 0);
+        server.createContext("/test-image.jpg", exchange -> {
+            exchange.sendResponseHeaders(200, imageContent.length());
+            exchange.getResponseBody().write(imageContent.getBytes());
+            exchange.close();
+        });
+        server.start();
+        try {
+            given().contentType("multipart/form-data")
+                    .multiPart("imageUrl", imageUrl)
+                    .when()
+                    .post("/api/products/{code}/image", code)
+                    .then()
+                    .statusCode(200)
+                    .body("status", endsWith("success"));
+        } finally {
+            server.stop(0);
+        }
+    }
+
+    @Test
+    void shouldReturnBadRequestForImageUrlWithNon200Response() throws Exception {
+        // Start a simple HTTP server to simulate a 404
+        String code = "P103";
+        int port = 8889;
+        String imageUrl = "http://localhost:" + port + "/notfound.jpg";
+        com.sun.net.httpserver.HttpServer server =
+                com.sun.net.httpserver.HttpServer.create(new java.net.InetSocketAddress(port), 0);
+        server.createContext("/notfound.jpg", exchange -> {
+            exchange.sendResponseHeaders(404, 0);
+            exchange.close();
+        });
+        server.start();
+        try {
+            given().contentType("multipart/form-data")
+                    .multiPart("imageUrl", imageUrl)
+                    .when()
+                    .post("/api/products/{code}/image", code)
+                    .then()
+                    .statusCode(400)
+                    .body("status", endsWith("error"));
+        } finally {
+            server.stop(0);
+        }
     }
 }

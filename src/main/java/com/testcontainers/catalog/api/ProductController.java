@@ -1,5 +1,8 @@
 package com.testcontainers.catalog.api;
 
+import static java.net.http.HttpClient.newHttpClient;
+import static java.net.http.HttpRequest.newBuilder;
+
 import com.testcontainers.catalog.domain.ProductNotFoundException;
 import com.testcontainers.catalog.domain.ProductService;
 import com.testcontainers.catalog.domain.models.CreateProductRequest;
@@ -8,6 +11,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -71,13 +77,11 @@ class ProductController {
                 return ResponseEntity.status(HttpURLConnection.HTTP_BAD_REQUEST)
                         .body(Map.of(STATUS_KEY, "error", "message", "Invalid imageUrl format"));
             }
-            java.net.http.HttpClient client = java.net.http.HttpClient.newHttpClient();
-            java.net.http.HttpRequest request = java.net.http.HttpRequest.newBuilder()
-                    .uri(java.net.URI.create(imageUrl))
-                    .GET()
-                    .build();
-            java.net.http.HttpResponse<InputStream> response =
-                    client.send(request, java.net.http.HttpResponse.BodyHandlers.ofInputStream());
+            // HttpClient does not need to be closed or managed with try-with-resources
+            HttpClient client = newHttpClient();
+            HttpRequest request =
+                    newBuilder().uri(java.net.URI.create(imageUrl)).GET().build();
+            HttpResponse<InputStream> response = client.send(request, HttpResponse.BodyHandlers.ofInputStream());
             if (response.statusCode() != 200) {
                 return ResponseEntity.status(HttpURLConnection.HTTP_BAD_REQUEST)
                         .body(Map.of(STATUS_KEY, "error", "message", "Invalid imageUrl or unable to download image"));
