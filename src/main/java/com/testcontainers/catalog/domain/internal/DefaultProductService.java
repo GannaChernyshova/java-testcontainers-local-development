@@ -62,6 +62,7 @@ class DefaultProductService implements ProductService {
     public void uploadProductImage(String code, String imageName, InputStream inputStream) {
         fileStorageService.upload(imageName, inputStream);
         productEventPublisher.publish(new ProductImageUploadedEvent(code, imageName));
+        code = code.replaceAll("[\n\r]", "_");
         log.info("Published event to update product image for code: {}", code);
     }
 

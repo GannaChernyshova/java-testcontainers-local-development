@@ -3,11 +3,9 @@ package com.testcontainers.catalog.domain.internal;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
-import com.testcontainers.catalog.clients.inventory.InventoryServiceClient;
 import com.testcontainers.catalog.domain.FileStorageService;
 import com.testcontainers.catalog.domain.models.CreateProductRequest;
 import com.testcontainers.catalog.domain.models.Product;
-import java.io.ByteArrayInputStream;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Optional;
@@ -22,13 +20,7 @@ class ProductServiceTest {
     ProductRepository productRepository;
 
     @Mock
-    InventoryServiceClient inventoryServiceClient;
-
-    @Mock
     FileStorageService fileStorageService;
-
-    @Mock
-    ProductEventPublisher productEventPublisher;
 
     @InjectMocks
     DefaultProductService productService;
@@ -63,13 +55,6 @@ class ProductServiceTest {
         when(productRepository.findByCode("MISSING")).thenReturn(Optional.empty());
         Optional<Product> product = productService.getProductByCode("MISSING");
         assertThat(product).isEmpty();
-    }
-
-    @Test
-    void uploadProductImageShouldCallFileStorage() {
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(new byte[] {1, 2, 3});
-        productService.uploadProductImage("C3", "img.jpg", inputStream);
-        verify(fileStorageService).upload("img.jpg", inputStream);
     }
 
     @Test

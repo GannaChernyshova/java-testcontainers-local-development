@@ -5,6 +5,8 @@ import com.testcontainers.catalog.domain.FileStorageService;
 import io.awspring.cloud.s3.S3Template;
 import java.io.InputStream;
 import java.time.Duration;
+import java.util.Objects;
+import javax.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -24,14 +26,22 @@ class S3FileStorageService implements FileStorageService {
         s3Template.createBucket(bucketName);
     }
 
-    public void upload(String filename, InputStream inputStream) {
-        log.debug("Uploading file with name {} to S3", filename);
+    public void upload(String filename, @Nullable InputStream inputStream) {
+        log.debug("Uploading file to S3");
         try {
-            s3Template.upload(properties.productImagesBucketName(), filename, inputStream, null);
-            log.debug("Uploaded file with name {} to S3", filename);
+            s3Template.upload(properties.productImagesBucketName(), filename, Objects.requireNonNull(inputStream), null);
+            log.debug("File uploaded to S3");
         } catch (Exception e) {
-            log.error("IException: ", e);
-            throw new RuntimeException(e);
+            log.error(
+                    "Failed to upload file '{}' to S3 bucket '{}'. Exception: {}",
+                    filename,
+                    properties.productImagesBucketName(),
+                    e.getMessage(),
+                    e);
+            throw new S3FileStorageException(
+                    "Failed to upload file '" + filename + "' to S3 bucket '" + properties.productImagesBucketName()
+                            + "'",
+                    e);
         }
     }
 
@@ -39,5 +49,11 @@ class S3FileStorageService implements FileStorageService {
         return s3Template
                 .createSignedGetURL(properties.productImagesBucketName(), filename, Duration.ofMinutes(60))
                 .toString();
+    }
+}
+
+class S3FileStorageException extends RuntimeException {
+    public S3FileStorageException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.test.context.jdbc.Sql;
 
 @Sql("/test-data.sql")
-public class ProductControllerTestNegative extends BaseIntegrationTest {
+class ProductControllerNegativeTest extends BaseIntegrationTest {
     @Test
     void doesNotCreateProductIfPayloadInvalid() {
         String code = UUID.randomUUID().toString();
