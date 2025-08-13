@@ -103,6 +103,53 @@ class ProductControllerTest extends BaseIntegrationTest {
     }
 
     @Test
+    void getProductByCodeShouldReturn404ForNonExistentProduct() {
+        String nonExistentCode = "NON_EXISTENT_CODE";
+        given().contentType(ContentType.JSON)
+                .when()
+                .get("/api/products/{code}", nonExistentCode)
+                .then()
+                .statusCode(404);
+    }
+
+    @Test
+    void createProductWithDuplicateCodeShouldFail() {
+        String code = "DUPLICATE_CODE";
+        // First creation should succeed
+        given().contentType(ContentType.JSON)
+                .body("{" + "\"code\": \"%s\",".formatted(code)
+                        + "\"name\": \"Product %s\",".formatted(code)
+                        + "\"description\": \"Product %s description\",".formatted(code)
+                        + "\"price\": 10.0"
+                        + "}")
+                .when()
+                .post("/api/products")
+                .then()
+                .statusCode(201);
+        // Second creation with same code should fail
+        given().contentType(ContentType.JSON)
+                .body("{" + "\"code\": \"%s\",".formatted(code)
+                        + "\"name\": \"Product %s\",".formatted(code)
+                        + "\"description\": \"Product %s description\",".formatted(code)
+                        + "\"price\": 10.0"
+                        + "}")
+                .when()
+                .post("/api/products")
+                .then()
+                .statusCode(409);
+    }
+
+    @Test
+    void createProductWithMissingFieldsShouldFail() {
+        given().contentType(ContentType.JSON)
+                .body("{" + "\"code\": \"\"," + "\"name\": \"\"," + "\"description\": \"\"," + "\"price\": null" + "}")
+                .when()
+                .post("/api/products")
+                .then()
+                .statusCode(400);
+    }
+
+    @Test
     void checkOpenAPIConformance() throws Exception {
         microcks.importAsMainArtifact(new ClassPathResource("catalog-openapi.yaml").getFile());
 
