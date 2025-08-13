@@ -1,33 +1,32 @@
 package com.testcontainers.catalog.domain.internal;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
+
 import com.testcontainers.catalog.clients.inventory.InventoryServiceClient;
 import com.testcontainers.catalog.domain.FileStorageService;
-import com.testcontainers.catalog.domain.ProductService;
 import com.testcontainers.catalog.domain.models.CreateProductRequest;
 import com.testcontainers.catalog.domain.models.Product;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-
 import java.io.ByteArrayInputStream;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 class ProductServiceTest {
     @Mock
     ProductRepository productRepository;
+
     @Mock
     InventoryServiceClient inventoryServiceClient;
+
     @Mock
     FileStorageService fileStorageService;
+
     @Mock
     ProductEventPublisher productEventPublisher;
 
@@ -68,7 +67,7 @@ class ProductServiceTest {
 
     @Test
     void uploadProductImageShouldCallFileStorage() {
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(new byte[]{1,2,3});
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(new byte[] {1, 2, 3});
         productService.uploadProductImage("C3", "img.jpg", inputStream);
         verify(fileStorageService).upload("img.jpg", inputStream);
     }
@@ -81,4 +80,3 @@ class ProductServiceTest {
         assertThat(productService.getAllProducts()).hasSize(1);
     }
 }
-

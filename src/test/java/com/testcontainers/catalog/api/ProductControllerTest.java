@@ -117,24 +117,22 @@ class ProductControllerTest extends BaseIntegrationTest {
         String code = "DUPLICATE_CODE";
         // First creation should succeed
         given().contentType(ContentType.JSON)
-                .body("{" +
-                        "\"code\": \"%s\",".formatted(code) +
-                        "\"name\": \"Product %s\",".formatted(code) +
-                        "\"description\": \"Product %s description\",".formatted(code) +
-                        "\"price\": 10.0" +
-                        "}")
+                .body("{" + "\"code\": \"%s\",".formatted(code)
+                        + "\"name\": \"Product %s\",".formatted(code)
+                        + "\"description\": \"Product %s description\",".formatted(code)
+                        + "\"price\": 10.0"
+                        + "}")
                 .when()
                 .post("/api/products")
                 .then()
                 .statusCode(201);
         // Second creation with same code should fail
         given().contentType(ContentType.JSON)
-                .body("{" +
-                        "\"code\": \"%s\",".formatted(code) +
-                        "\"name\": \"Product %s\",".formatted(code) +
-                        "\"description\": \"Product %s description\",".formatted(code) +
-                        "\"price\": 10.0" +
-                        "}")
+                .body("{" + "\"code\": \"%s\",".formatted(code)
+                        + "\"name\": \"Product %s\",".formatted(code)
+                        + "\"description\": \"Product %s description\",".formatted(code)
+                        + "\"price\": 10.0"
+                        + "}")
                 .when()
                 .post("/api/products")
                 .then()
@@ -144,12 +142,7 @@ class ProductControllerTest extends BaseIntegrationTest {
     @Test
     void createProductWithMissingFieldsShouldFail() {
         given().contentType(ContentType.JSON)
-                .body("{" +
-                        "\"code\": \"\"," +
-                        "\"name\": \"\"," +
-                        "\"description\": \"\"," +
-                        "\"price\": null" +
-                        "}")
+                .body("{" + "\"code\": \"\"," + "\"name\": \"\"," + "\"description\": \"\"," + "\"price\": null" + "}")
                 .when()
                 .post("/api/products")
                 .then()
